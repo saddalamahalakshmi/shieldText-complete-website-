@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A student web project that checks messages for common spam warning signs and stores scan history in your browser.">
+  <title>ShieldText | AI Spam Message Detector</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#home" aria-label="ShieldText home"><span class="brand-mark">S</span><span>ShieldText<small>MESSAGE SAFETY LAB</small></span></a>
+    <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation">☰</button>
+    <nav id="nav">
+      <a href="#home" class="nav-link active">Home</a>
+      <a href="#detector" class="nav-link">Detector</a>
+      <a href="#history" class="nav-link">History</a>
+      <a href="#learn" class="nav-link">Safety Guide</a>
+      <a href="#about" class="nav-link">About</a>
+      <button id="themeToggle" class="theme-btn" type="button" title="Switch theme">☾ Theme</button>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero section" id="home">
+      <div class="hero-copy">
+        <div class="eyebrow"><span class="pulse"></span> STUDENT PROJECT · CYBER AWARENESS</div>
+        <h1>Think before you <span class="gradient-text">click.</span></h1>
+        <p class="hero-lead">Check a message for common spam warning signs before you trust a link, share a password, or respond to an unexpected offer.</p>
+        <div class="hero-actions">
+          <a class="btn primary" href="#detector">Check a message <span>↗</span></a>
+          <a class="btn secondary" href="#learn">Learn safety tips</a>
+        </div>
+        <div class="trust-row"><span>✓ No sign-in required</span><span>✓ Browser-based demo</span><span>✓ Local scan history</span></div>
+      </div>
+      <div class="hero-visual" aria-label="Message safety illustration">
+        <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+        <div class="shield"><span>✓</span></div>
+        <div class="floating-card card-top"><span class="mini-icon warning">!</span><div><b>Suspicious link</b><small>Check before opening</small></div><span class="dot-red"></span></div>
+        <div class="floating-card card-bottom"><span class="mini-icon safe">✓</span><div><b>Safety check</b><small>Review the warning signs</small></div><span class="dot-green"></span></div>
+      </div>
+    </section>
+
+    <section class="stats-grid section compact">
+      <article class="stat-card"><div class="stat-icon purple">⌁</div><div><p>Total scans</p><strong id="totalScans">0</strong><small>Saved in this browser</small></div></article>
+      <article class="stat-card"><div class="stat-icon red">!</div><div><p>Flagged as spam</p><strong id="spamScans">0</strong><small>Rule-based result</small></div></article>
+      <article class="stat-card"><div class="stat-icon green">✓</div><div><p>Not flagged</p><strong id="safeScans">0</strong><small>Still stay alert</small></div></article>
+      <article class="stat-card"><div class="stat-icon blue">↗</div><div><p>Safety score</p><strong id="safetyRate">—</strong><small>Based on scan results</small></div></article>
+    </section>
+
+    <section class="section detector-section" id="detector">
+      <div class="section-heading">
+        <div><div class="eyebrow">MESSAGE ANALYSIS</div><h2>Check a message</h2><p>Paste text below. The demo checks for common warning signs and explains its result.</p></div>
+        <span class="pill">Demo classifier</span>
+      </div>
+      <div class="detector-layout">
+        <div class="panel input-panel">
+          <label for="messageInput">Message text</label>
+          <textarea id="messageInput" maxlength="5000" placeholder="Example: Congratulations! You won a prize. Click this link now to claim it..." aria-describedby="charCount"></textarea>
+          <div class="textarea-meta"><span id="charCount">0 / 5000 characters</span><button class="text-button" id="clearInput" type="button">Clear text</button></div>
+          <div class="examples"><span>Try an example:</span><button class="example-chip" data-example="spam">Suspicious prize</button><button class="example-chip" data-example="safe">Normal message</button></div>
+          <button class="btn primary full" id="analyzeBtn" type="button">Analyze message <span>→</span></button>
+          <p class="privacy-note">🔒 Text is analyzed in your browser. Scan history is saved in this browser only.</p>
+        </div>
+        <div class="panel result-panel" id="resultPanel">
+          <div class="result-empty" id="emptyResult"><div class="empty-art">⌕</div><h3>Your result will appear here</h3><p>Enter a message and select <b>Analyze message</b> to see its classification and the warning signs found.</p></div>
+          <div id="analysisResult" hidden>
+            <div class="result-top"><span id="resultIcon" class="result-icon">!</span><span class="pill" id="resultLabel">ANALYSIS RESULT</span></div>
+            <h3 id="resultTitle">Review this message</h3>
+            <p id="resultSummary" class="result-summary"></p>
+            <div class="confidence-head"><span>Rule-match indicator</span><b id="scoreText">0%</b></div>
+            <div class="progress-track"><div id="scoreBar" class="progress-fill"></div></div>
+            <p class="score-caption">This is a heuristic indicator, not a calibrated probability that the message is spam.</p>
+            <h4>Signals found</h4>
+            <ul class="signals-list" id="signalsList"></ul>
+            <div class="result-actions"><button id="saveResult" class="btn secondary" type="button">Save to history</button><button id="copyResult" class="btn ghost" type="button">Copy result</button></div>
+          </div>
+        </div>
+      </div>
+      <p class="disclaimer">Important: this is an educational, rule-based prototype—not a trained AI model or a guarantee of safety. A message marked “Not flagged” can still be dangerous.</p>
+    </section>
+
+    <section class="section" id="history">
+      <div class="section-heading"><div><div class="eyebrow">YOUR ACTIVITY</div><h2>Scan history</h2><p>Previously saved results on this device.</p></div><div class="history-actions"><button class="btn secondary small" id="exportBtn">Export CSV</button><button class="btn danger-outline small" id="deleteHistoryBtn">Clear history</button></div></div>
+      <div class="panel history-panel">
+        <div class="table-wrap"><table><thead><tr><th>Message preview</th><th>Result</th><th>Indicator</th><th>Date</th></tr></thead><tbody id="historyBody"><tr><td colspan="4" class="empty-cell">No saved scans yet. Analyze a message and save the result.</td></tr></tbody></table></div>
+        <div class="history-footer"><span id="historyCount">0 saved scans</span><span>Stored with browser localStorage</span></div>
+      </div>
+    </section>
+
+    <section class="section learn-section" id="learn">
+      <div class="section-heading"><div><div class="eyebrow">STAY PROTECTED</div><h2>Spot the warning signs</h2><p>Use these simple checks whenever an unexpected message arrives.</p></div></div>
+      <div class="learn-grid">
+        <article class="learn-card"><div class="learn-icon red">↗</div><h3>Unexpected links</h3><p>Check the sender and website address carefully. Do not open shortened or unfamiliar links just because a message creates urgency.</p><span class="learn-tag">LINK SAFETY</span></article>
+        <article class="learn-card"><div class="learn-icon orange">!</div><h3>Urgent pressure</h3><p>Messages saying “act now” or threatening account closure may be trying to stop you from thinking carefully.</p><span class="learn-tag">URGENCY</span></article>
+        <article class="learn-card"><div class="learn-icon purple">♙</div><h3>Private information</h3><p>Never share passwords, PINs, or one-time passwords in response to a message or an unexpected call.</p><span class="learn-tag">PRIVACY</span></article>
+        <article class="learn-card"><div class="learn-icon green">✓</div><h3>Verify independently</h3><p>Contact the organization using its official app, website, or a known phone number—not the details inside a suspicious message.</p><span class="learn-tag">VERIFY FIRST</span></article>
+      </div>
+    </section>
+
+    <section class="section about-section" id="about">
+      <div class="about-card">
+        <div class="about-copy"><div class="eyebrow">ABOUT THE PROJECT</div><h2>Small checks. Safer choices.</h2><p>ShieldText is a student website project demonstrating how a web interface can analyze text, present explainable warning signs, and store a local history of results.</p><p>It uses HTML for structure, CSS for responsive styling, and JavaScript for rule-based analysis and browser storage.</p><div class="tech-tags"><span>HTML5</span><span>CSS3</span><span>JavaScript</span><span>localStorage</span></div></div>
+        <div class="about-side"><div class="code-window"><div class="window-dots"><i></i><i></i><i></i></div><code><span>const</span> message = userInput;<br><span>const</span> signals = checkRules(message);<br><span>return</span> explainResult(signals);</code></div><p>Explainable prototype · No external API required</p></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer"><a class="brand footer-brand" href="#home"><span class="brand-mark">S</span><span>ShieldText<small>MESSAGE SAFETY LAB</small></span></a><p>Built for educational use · Stay curious, stay safe.</p><a href="#home">Back to top ↑</a></footer>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="script.js"></script>
+</body>
+</html>
